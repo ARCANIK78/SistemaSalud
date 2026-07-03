@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Nuevo Paciente')
+@section('title', 'Nueva Consulta')
 
 @push('styles')
 <style>
@@ -11,6 +11,7 @@
     label:first-child { margin-top: 0; }
     input, select, textarea { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; box-sizing: border-box; outline: none; background: #fff; }
     input:focus, select:focus, textarea:focus { border-color: #3182ce; box-shadow: 0 0 0 2px rgba(49,130,206,0.15); }
+    textarea { resize: vertical; min-height: 80px; }
     .btn-group { display: flex; gap: 10px; margin-top: 24px; }
     .btn { padding: 10px 20px; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; text-decoration: none; display: inline-block; }
     .btn-primary { background: #3182ce; color: #fff; }
@@ -22,40 +23,46 @@
 
 @section('content')
     <div class="container-form">
-        <h2>Nuevo Paciente</h2>
+        <h2>Nueva Consulta</h2>
         <div class="card">
-            <form method="POST" action="{{ route('pacientes.store') }}">
+            <form method="POST" action="{{ route('consultas.store') }}">
                 @csrf
 
-                <label>Nombre</label>
-                <input type="text" name="nombre" required>
-
-                <label>Edad</label>
-                <input type="number" name="edad" min="0" max="150" required>
-
-                <label>Sexo</label>
-                <select name="sexo" required>
-                    <option value="">Seleccionar...</option>
-                    <option value="Masculino">Masculino</option>
-                    <option value="Femenino">Femenino</option>
+                <label>Paciente</label>
+                <select name="id_paciente" required>
+                    <option value="">Seleccionar paciente...</option>
+                    @foreach ($pacientes as $p)
+                        <option value="{{ $p->id_paciente }}">{{ $p->nombre }}</option>
+                    @endforeach
                 </select>
 
-                <label>Diagnóstico</label>
-                <input type="text" name="diagnostico">
+                <label>Enfermedad</label>
+                <select name="id_enfermedad" required>
+                    <option value="">Seleccionar enfermedad...</option>
+                    @foreach ($enfermedades as $e)
+                        <option value="{{ $e->id_enfermedad }}">{{ $e->nombre }}</option>
+                    @endforeach
+                </select>
 
-                <label>Fecha de Ingreso</label>
-                <input type="date" name="fecha_ingreso" value="{{ date('Y-m-d') }}" required>
+                <label>Fecha</label>
+                <input type="date" name="fecha" value="{{ date('Y-m-d') }}" required>
+
+                <label>Diagnóstico</label>
+                <textarea name="diagnostico"></textarea>
+
+                <label>Tratamiento</label>
+                <textarea name="tratamiento"></textarea>
 
                 <label>Estado</label>
                 <select name="estado" required>
-                    <option value="Activo">Activo</option>
                     <option value="En tratamiento">En tratamiento</option>
                     <option value="Recuperado">Recuperado</option>
+                    <option value="Hospitalizado">Hospitalizado</option>
                 </select>
 
                 <div class="btn-group">
                     <button type="submit" class="btn btn-primary">Guardar</button>
-                    <a href="{{ route('pacientes.index') }}" class="btn btn-secondary">Cancelar</a>
+                    <a href="{{ route('consultas.index') }}" class="btn btn-secondary">Cancelar</a>
                 </div>
             </form>
         </div>

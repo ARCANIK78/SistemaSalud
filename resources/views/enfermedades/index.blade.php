@@ -1,47 +1,53 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Sistema de Salud — Frecuencia de Enfermedades</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f8f9fa; color: #333; margin: 0; padding: 25px; }
-        .container { width: 100%; max-width: 100%; box-sizing: border-box; }
-        
-        .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .title-area h2 { margin: 0; font-size: 20px; font-weight: 600; color: #000; }
-        .title-area p { margin: 4px 0 0 0; font-size: 13px; color: #666; }
-        .algoritmo-badge { font-size: 13px; color: #333; font-weight: 500; }
+@extends('layouts.app')
 
-        /* Estilos de la tabla tipo panel corporativo */
-        .table-responsive { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #eef0f2; overflow: hidden; margin-bottom: 40px; }
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
-        th { background-color: #fff; padding: 14px 16px; font-weight: 600; color: #888; border-bottom: 2px solid #f1f3f5; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
-        td { padding: 14px 16px; border-bottom: 1px solid #f1f3f5; color: #333; }
-        tr:hover { background-color: #f8f9fa; }
+@section('title', 'Sistema de Salud — Frecuencia de Enfermedades')
 
-        /* Badges de nivel de riesgo */
-        .badge-riesgo { font-weight: 600; font-size: 13px; }
-        .riesgo-alto { color: #e53e3e; }
-        .riesgo-medio { color: #dd6b20; }
-        .riesgo-bajo { color: #38a169; }
+@push('styles')
+<style>
+    .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+    .title-area h2 { margin: 0; font-size: 20px; font-weight: 600; color: #000; }
+    .title-area p { margin: 4px 0 0 0; font-size: 13px; color: #666; }
+    .algoritmo-badge { font-size: 13px; color: #333; font-weight: 500; }
 
-        /* Contenedor del gráfico */
-        .chart-container { background: #fff; border-radius: 8px; border: 1px solid #eef0f2; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        .chart-title { font-size: 16px; font-weight: 600; color: #000; margin-bottom: 20px; }
-    </style>
-</head>
-<body>
+    .table-responsive { background: #fff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #eef0f2; overflow: hidden; margin-bottom: 40px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+    th { background-color: #fff; padding: 14px 16px; font-weight: 600; color: #888; border-bottom: 2px solid #f1f3f5; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+    td { padding: 14px 16px; border-bottom: 1px solid #f1f3f5; color: #333; }
+    tr:hover { background-color: #f8f9fa; }
 
-<div class="container">
+    .badge-riesgo { font-weight: 600; font-size: 13px; }
+    .riesgo-alto { color: #e53e3e; }
+    .riesgo-medio { color: #dd6b20; }
+    .riesgo-bajo { color: #38a169; }
 
+    .chart-container { background: #fff; border-radius: 8px; border: 1px solid #eef0f2; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .chart-title { font-size: 16px; font-weight: 600; color: #000; margin-bottom: 20px; }
+    .btn-create { display: inline-block; padding: 8px 16px; background: #3182ce; color: #fff; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 500; margin-left: 12px; }
+    .btn-create:hover { background: #2b6cb0; }
+    .btn-edit { display: inline-block; padding: 5px 12px; background: #e2e8f0; color: #4a5568; border-radius: 4px; text-decoration: none; font-size: 12px; font-weight: 500; }
+    .btn-edit:hover { background: #cbd5e0; }
+    .alert-success { padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; font-size: 14px; background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+    .alert-error { padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; font-size: 14px; background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+</style>
+@endpush
+
+@section('content')
+    @if (session('success'))
+        <div class="alert-success">{{ session('success') }}</div>
+    @endif
+    @if (session('error'))
+        <div class="alert-error">{{ session('error') }}</div>
+    @endif
     <div class="header-section">
         <div class="title-area">
             <h2>Frecuencia de enfermedades</h2>
             <p>Ordenado por frecuencia descendente</p>
         </div>
-        <div class="algoritmo-badge">
-            Algoritmo: <span style="font-weight: 600;">Counting Sort</span>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <a href="{{ route('enfermedades.create') }}" class="btn-create">+ Nueva</a>
+            <div class="algoritmo-badge">
+                Algoritmo: <span style="font-weight: 600;">Counting Sort</span>
+            </div>
         </div>
     </div>
 
@@ -55,6 +61,7 @@
                     <th>Recuperados</th>
                     <th>Incidencia</th>
                     <th>Riesgo</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -64,11 +71,7 @@
                         $casos = (int)$fila->casos_totales;
                         $activos = (int)$fila->activos;
                         $recuperados = (int)$fila->recuperados;
-
-                        // Calcular la incidencia de forma dinámica
                         $incidencia = ($casos / $total_general_pacientes) * 100;
-
-                        // Determinar el riesgo lógicamente
                         if ($casos >= 12) {
                             $riesgo_texto = "Alto";
                             $riesgo_clase = "riesgo-alto";
@@ -87,10 +90,11 @@
                         <td>{{ $recuperados }}</td>
                         <td style="color: #4a5568;">{{ number_format($incidencia, 1) }}%</td>
                         <td><span class="badge-riesgo {{ $riesgo_clase }}">{{ $riesgo_texto }}</span></td>
+                        <td><a href="{{ route('enfermedades.edit', $fila->id_enfermedad) }}" class="btn-edit">Editar</a></td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" style="text-align: center; color: #999; padding: 40px;">
+                        <td colspan="7" style="text-align: center; color: #999; padding: 40px;">
                             No hay datos de pacientes registrados para procesar.
                         </td>
                     </tr>
@@ -104,51 +108,46 @@
         <canvas id="graficoEnfermedades" style="max-height: 380px; width: 100%;"></canvas>
     </div>
 
-</div>
+    <script>
+        const etiquetasEnfermedades = @json($resultados->pluck('enfermedad'));
+        const datosTotales = @json($resultados->pluck('casos_totales'));
 
-<script>
-    // Pasamos las colecciones directo a arreglos de JavaScript
-    const etiquetasEnfermedades = @json($resultados->pluck('enfermedad'));
-    const datosTotales = @json($resultados->pluck('casos_totales'));
+        const paletaColores = [
+            '#3182ce', '#38a169', '#ecc94b', '#5a67d8', 
+            '#e53e3e', '#ed64a6', '#ed8936', '#4fd1c5'
+        ];
 
-    const paletaColores = [
-        '#3182ce', '#38a169', '#ecc94b', '#5a67d8', 
-        '#e53e3e', '#ed64a6', '#ed8936', '#4fd1c5'
-    ];
-
-    const ctx = document.getElementById('graficoEnfermedades').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: etiquetasEnfermedades,
-            datasets: [{
-                label: 'Casos Totales',
-                data: datosTotales,
-                backgroundColor: paletaColores.slice(0, etiquetasEnfermedades.length),
-                borderWidth: 0,
-                borderRadius: 4
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false }
+        const ctx = document.getElementById('graficoEnfermedades').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: etiquetasEnfermedades,
+                datasets: [{
+                    label: 'Casos Totales',
+                    data: datosTotales,
+                    backgroundColor: paletaColores.slice(0, etiquetasEnfermedades.length),
+                    borderWidth: 0,
+                    borderRadius: 4
+                }]
             },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: { stepSize: 2, color: '#718096' },
-                    grid: { color: '#edf2f7' }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
                 },
-                x: {
-                    ticks: { color: '#718096', font: { size: 13 } },
-                    grid: { display: false }
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 2, color: '#718096' },
+                        grid: { color: '#edf2f7' }
+                    },
+                    x: {
+                        ticks: { color: '#718096', font: { size: 13 } },
+                        grid: { display: false }
+                    }
                 }
             }
-        }
-    });
-</script>
-
-</body>
-</html>
+        });
+    </script>
+@endsection
