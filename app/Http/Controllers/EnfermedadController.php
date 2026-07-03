@@ -11,13 +11,14 @@ class EnfermedadController extends Controller
     public function index()
     {
         $resultados = Consulta::selectRaw("
+                enfermedades.id_enfermedad,
                 enfermedades.nombre as enfermedad,
                 COUNT(*) as casos_totales,
                 SUM(CASE WHEN consultas.estado = 'En tratamiento' OR consultas.estado = 'Hospitalizado' THEN 1 ELSE 0 END) as activos,
                 SUM(CASE WHEN consultas.estado = 'Recuperado' THEN 1 ELSE 0 END) as recuperados
             ")
             ->join('enfermedades', 'consultas.id_enfermedad', '=', 'enfermedades.id_enfermedad')
-            ->groupBy('enfermedades.nombre')
+            ->groupBy('enfermedades.id_enfermedad', 'enfermedades.nombre')
             ->orderByDesc('casos_totales')
             ->get();
 
@@ -42,7 +43,7 @@ class EnfermedadController extends Controller
 
         Enfermedad::create($data);
 
-        return redirect()->route('enfermedades.index');
+        return redirect()->route('enfermedades.index')->with('success', 'Enfermedad creada correctamente.');
     }
 
     public function edit(Enfermedad $enfermedad)
@@ -61,13 +62,17 @@ class EnfermedadController extends Controller
 
         $enfermedad->update($data);
 
-        return redirect()->route('enfermedades.index');
+        return redirect()->route('enfermedades.index')->with('success', 'Enfermedad actualizada correctamente.');
     }
 
     public function destroy(Enfermedad $enfermedad)
     {
-        $enfermedad->delete();
+        try {
+            $enfermedad->delete();
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->route('enfermedades.index')->with('error', 'No se puede eliminar: la enfermedad tiene consultas asociadas.');
+        }
 
-        return redirect()->route('enfermedades.index');
+        return redirect()->route('enfermedades.index')->with('success', 'Enfermedad eliminada correctamente.');
     }
 }

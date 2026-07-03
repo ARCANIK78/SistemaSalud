@@ -22,8 +22,8 @@
             <div class="subtext">Años, pacientes activos</div>
         </div>
         <div class="metric-card">
-            <div class="label">Mediana estancia</div>
-            <div class="value">{{ $mediana_estancia }}</div>
+            <div class="label">Promedio estancia</div>
+            <div class="value">{{ $promedio_estancia }}</div>
             <div class="subtext">Días promedio</div>
         </div>
         <div class="metric-card">

@@ -13,7 +13,7 @@ class DashboardController extends Controller
 
         $promedio_edad = round(Paciente::avg('edad') ?? 0, 1);
 
-        $mediana_estancia = round(Paciente::where('fecha_ingreso', '!=', '0000-00-00')
+        $promedio_estancia = round(Paciente::where('fecha_ingreso', '!=', '0000-00-00')
             ->get()
             ->avg(fn($p) => now()->diffInDays($p->fecha_ingreso)) ?? 0, 1);
 
@@ -21,7 +21,7 @@ class DashboardController extends Controller
         $tasa_recuperacion = round(($recuperados / $total) * 100, 1);
 
         $total_consultas = Consulta::count();
-        $total_enfermedades = Consulta::distinct('id_enfermedad')->count('id_enfermedad');
+        $total_enfermedades = Consulta::distinct()->count('id_enfermedad');
         $indice_contagio = $total_enfermedades > 0 ? round($total_consultas / $total_enfermedades, 2) : 0;
 
         $casosMensuales = [];
@@ -31,7 +31,7 @@ class DashboardController extends Controller
             $count = Consulta::whereYear('fecha', $mes->year)
                 ->whereMonth('fecha', $mes->month)
                 ->count();
-            $casosMensuales[] = max($count, rand(2, 5));
+            $casosMensuales[] = $count;
         }
         for ($i = 0; $i < 6; $i++) {
             $sum = 0;
@@ -55,7 +55,7 @@ class DashboardController extends Controller
         }
 
         return view('home.dashboard', compact(
-            'promedio_edad', 'mediana_estancia', 'tasa_recuperacion',
+            'promedio_edad', 'promedio_estancia', 'tasa_recuperacion',
             'indice_contagio', 'casosMensuales', 'casosSuavizados',
             'masculino_counts', 'femenino_counts'
         ));
