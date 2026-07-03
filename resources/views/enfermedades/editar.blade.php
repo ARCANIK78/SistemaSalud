@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Enfermedad</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f8f9fa; color: #333; margin: 0; padding: 25px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        h2 { margin: 0 0 20px 0; font-size: 22px; font-weight: 600; color: #000; }
+        .card { background: #fff; border-radius: 8px; border: 1px solid #eef0f2; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        label { display: block; font-size: 14px; font-weight: 500; color: #444; margin-bottom: 6px; margin-top: 16px; }
+        label:first-child { margin-top: 0; }
+        input, textarea { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; box-sizing: border-box; outline: none; }
+        input:focus, textarea:focus { border-color: #3182ce; box-shadow: 0 0 0 2px rgba(49,130,206,0.15); }
+        textarea { resize: vertical; min-height: 80px; }
+        .btn-group { display: flex; gap: 10px; margin-top: 24px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; text-decoration: none; display: inline-block; }
+        .btn-primary { background: #3182ce; color: #fff; }
+        .btn-primary:hover { background: #2b6cb0; }
+        .btn-secondary { background: #e2e8f0; color: #4a5568; }
+        .btn-secondary:hover { background: #cbd5e0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Editar Enfermedad</h2>
+        <div class="card">
+            <form method="POST" action="{{ route('enfermedades.update', $enfermedad->id_enfermedad) }}">
+                @csrf
+                @method('PUT')
+                <label>Nombre</label>
+                <input type="text" name="nombre" value="{{ $enfermedad->nombre }}" required>
+
+                <label>Descripción</label>
+                <textarea name="descripcion">{{ $enfermedad->descripcion }}</textarea>
+
+                <label>Categoría</label>
+                <input type="text" name="categoria" value="{{ $enfermedad->categoria }}">
+
+                <label>Tratamiento</label>
+                <textarea name="tratamiento">{{ $enfermedad->tratamiento }}</textarea>
+
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">Actualizar</button>
+                    <a href="{{ route('enfermedades.index') }}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

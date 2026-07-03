@@ -107,7 +107,7 @@
 </div>
 
 <script>
-    // Usamos @json de Blade para pasar las colecciones directo a arreglos de JavaScript
+    // Pasamos las colecciones directo a arreglos de JavaScript
     const etiquetasEnfermedades = @json($resultados->pluck('enfermedad'));
     const datosTotales = @json($resultados->pluck('casos_totales'));
 
